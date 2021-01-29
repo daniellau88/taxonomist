@@ -5,6 +5,7 @@ import { DialogProvider } from '../DialogProvider';
 import { UIState } from '../UIState';
 import * as path from 'path';
 import * as $ from 'jquery';
+import * as Mousetrap from 'mousetrap';
 
 export class ClassifyImagesState extends UIState
 {
@@ -176,9 +177,11 @@ export class ClassifyImagesState extends UIState
 		leftColumn.append(this.undoOuter);
 		this.hideUndoBar();
 		
-		//Wire up the event handler for the undo button
-		this.undoButton.click(() =>
+		var undoFunction = () =>
 		{
+			if (this.undoButton.attr('disabled')) {
+				return;
+			}
 			//Disable the undo button until the request has been processed
 			this.disableUndoButton();
 			
@@ -191,7 +194,11 @@ export class ClassifyImagesState extends UIState
 				this.dialogs.handleError(err);
 				this.updateDisplay();
 			});
-		});
+		}
+
+		//Wire up the event handler for the undo button
+		this.undoButton.click(undoFunction);
+		Mousetrap.bind('u', undoFunction);
 		
 		//Create the button panel and the text to display the image progress
 		let rightColumn = $(document.createElement('div')).attr('id', 'right-column-wrapper');
@@ -202,9 +209,12 @@ export class ClassifyImagesState extends UIState
 		
 		//Create a button to ignore the current image
 		let ignoreButton = $(document.createElement('button')).html('Ignore&nbsp;Current&nbsp;Image');
-		ignoreButton.insertBefore(this.buttonWrapper);
-		ignoreButton.click(() =>
+		this.buttonWrapper.append(ignoreButton);
+		var ignoreFunction = () =>
 		{
+			if (ignoreButton.attr('disabled')) {
+				return;
+			}
 			//Disable the classification buttons until the request has been processed
 			this.disableClassificationButtons();
 			
@@ -217,15 +227,19 @@ export class ClassifyImagesState extends UIState
 				this.dialogs.handleError(err);
 				this.updateDisplay();
 			});
-		});
-		
+		}
+		ignoreButton.click(ignoreFunction);
+		Mousetrap.bind('i', ignoreFunction);
 		//Create our list of classification buttons
-		for (let label of this.manager.getLabels())
+		this.manager.getLabels().forEach((label, index) =>
 		{
 			let button = $(document.createElement('button')).text(label);
 			this.buttonWrapper.append(button);
-			button.click(() =>
+			var clickFunction = () =>
 			{
+				if (button.attr('disabled')) {
+					return;
+				}
 				//Disable the classification buttons until the request has been processed
 				this.disableClassificationButtons();
 				
@@ -238,8 +252,10 @@ export class ClassifyImagesState extends UIState
 					this.dialogs.handleError(err);
 					this.updateDisplay();
 				});
-			});
-		}
+			}
+			Mousetrap.bind('' + (index + 1), clickFunction);
+			button.click(clickFunction);
+		});
 		
 		//Update our image display to show the initial image
 		this.updateDisplay();
