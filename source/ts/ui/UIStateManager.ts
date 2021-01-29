@@ -75,58 +75,42 @@ export class UIStateManager implements DialogProvider, TransitionProvider
 	//Displays an informational message to the user
 	public showMessage(message : string) : Promise<any>
 	{
-		return new Promise((resolve : Function, reject : Function) =>
-		{
-			dialog.showMessageBox({'message': message, 'buttons': ['OK']}, (response : number) => {
-				resolve(true);
-			});
-		});
+		return dialog.showMessageBox({'message': message, 'buttons': ['OK']});
 	}
 	
 	//Prompts the user for confirmation of an action
 	public showConfirmDialog(message : string, confirmButtonLabel : string) : Promise<boolean>
 	{
-		return new Promise((resolve : Function, reject : Function) =>
-		{
-			dialog.showMessageBox({'message': message, 'buttons': [confirmButtonLabel, 'Cancel']}, (response : number) =>
-			{
-				if (response === 0) {
-					resolve(true);
-				}
-				else {
-					reject(false);
-				}
-			});
-		});
+
+		return dialog.showMessageBox({'message': message, 'buttons': [confirmButtonLabel, 'Cancel']}).then((x) => {console.log(x); return x.response === 0;});
 	}
 	
 	//Prompts the user for an input path for opening a file or directory
 	public showOpenDialog(title : string, filters : any[], chooseDirs? : boolean) : Promise<string[]>
 	{
-		return new Promise((resolve : Function, reject : Function) =>
-		{
-			dialog.showOpenDialog(
-				BrowserWindow.getFocusedWindow(),
+		var window = BrowserWindow.getFocusedWindow();
+		var promise = window ? dialog.showOpenDialog(
+				window,
 				{
 					'title': title,
 					'filters': filters,
 					'properties': [((chooseDirs === true) ? 'openDirectory' : 'openFile')]
-				},
-				(paths : string[]) => {
-					resolve(paths);
+				}
+			) : dialog.showOpenDialog(
+				{
+					'title': title,
+					'filters': filters,
+					'properties': [((chooseDirs === true) ? 'openDirectory' : 'openFile')]
 				}
 			);
-		});
+		return promise.then(x => x.filePaths);
 	}
 	
 	//Prompts the user for an output file path for saving a file
 	public showSaveDialog(title : string, filters : any[]) : Promise<string>
 	{
-		return new Promise((resolve : Function, reject : Function) =>
-		{
-			dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {'title': title, 'filters': filters}, (path : string) => {
-				resolve(path);
-			});
-		});
+		var window = BrowserWindow.getFocusedWindow();
+		var promise = window ? dialog.showSaveDialog(window, {'title': title, 'filters': filters}) : dialog.showSaveDialog({'title': title, 'filters': filters});
+		return promise.then(x => x.filePath ? x.filePath : "");
 	}
 }

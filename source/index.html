@@ -7,14 +7,7 @@
 			
 			const UIStateManager = require('./js/ui/UIStateManager.js').UIStateManager;
 			const $ = require('jquery');
-			
-			//When running in development mode, use Devtron and also live-reload CSS changes
-			if (require('electron-is-dev') === true)
-			{
-				require('devtron').install();
-				require('electron-css-reload')();
-			}
-			
+
 			$(document).ready(() =>
 			{
 				//Load the UI

@@ -134,7 +134,7 @@ export class SelectParametersState extends UIState
 		
 		//Wire up the "show label files" button
 		showDirButton.click(() => {
-			remote.shell.openItem(ClassificationLabelManager.labelsDirectory());
+			remote.shell.openPath(ClassificationLabelManager.labelsDirectory());
 		});
 		
 		//Wire up the "rescan" button

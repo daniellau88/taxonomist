@@ -49,7 +49,7 @@ export class LoadingLabelsState extends UIState
 				
 				//Wire up the link to open the labels directory in the system file browser
 				$('a', this.root).click(() => {
-					remote.shell.openItem(labelsDir);
+					remote.shell.openPath(labelsDir);
 				});
 				
 				//Wire up the reload button

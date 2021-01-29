@@ -24,23 +24,25 @@
 	"dependencies": {
 		"electron-is-dev": "*",
 		"glob": "*",
-		"jquery": "*",
+		"jquery": "^3.5.1",
 		"mkdirp": "*",
-		"util.promisify": "*"
+		"util.promisify": "*",
+		"xmlbuilder": "^15.1.1"
 	},
 	"devDependencies": {
-		"devtron": "*",
-		"electron": "*",
-		"electron-builder": "*",
-		"electron-css-reload": "*",
-		"rimraf": "*",
-		"tslint": "*",
-		"typescript": "*",
 		"@types/cheerio": "*",
 		"@types/glob": "*",
 		"@types/jquery": "*",
 		"@types/mkdirp": "*",
-		"@types/numeral": "*"
+		"@types/numeral": "*",
+		"devtron": "*",
+		"electron": "^11.2.1",
+		"electron-builder": "*",
+		"electron-css-reload": "*",
+		"electron-packager": "^15.2.0",
+		"rimraf": "*",
+		"tslint": "*",
+		"typescript": "^3.5.3"
 	},
 	"build": {
 		"appId": "com.adamrehn.taxonomist",

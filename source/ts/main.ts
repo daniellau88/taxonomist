@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
+import * as url from 'url';
 
 //Maintain a reference to the main window to prevent it being freed prematurely
 let mainWindow : Electron.BrowserWindow | null;
@@ -12,6 +13,7 @@ app.on('window-all-closed', function() {
 //Wait until Electron has completed startup initialisation
 app.on('ready', function()
 {
+	console.log("ASDjkasfjdk");
 	//Create the main browser window
 	mainWindow = new BrowserWindow({
 		'width':          1280,
@@ -22,7 +24,11 @@ app.on('ready', function()
 		'show':           false,
 		'resizable':      true,
 		'useContentSize': true,
-		'fullscreenable': false
+		'fullscreenable': false,
+		'webPreferences': {
+		    'nodeIntegration': true,
+      		    'enableRemoteModule': true,
+		},
 	});
 	
 	//Display the window only once initial loading is complete
@@ -34,7 +40,7 @@ app.on('ready', function()
 	mainWindow.on('closed', function() {
 		mainWindow = null;
 	});
-	
+
 	//Load the main page of the UI
 	mainWindow.loadURL('file://' + path.dirname(__dirname) + '/index.html');
 });
